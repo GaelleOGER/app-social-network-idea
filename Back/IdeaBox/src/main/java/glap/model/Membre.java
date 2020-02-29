@@ -1,13 +1,24 @@
 package glap.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 /**
  * The persistent class for the membre database table.
- * 
+ *
  */
 @Entity
 @Table(name="membre")
@@ -18,7 +29,20 @@ public class Membre implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
-	private int id;
+	private Integer id;
+
+	//bi-directional many-to-many association to Idee
+	@ManyToMany
+	@JoinTable(
+			name="collaborateur"
+			, joinColumns={
+					@JoinColumn(name="membre_id", nullable=false)
+			}
+			, inverseJoinColumns={
+					@JoinColumn(name="idee_id", nullable=false)
+			}
+			)
+	private Set<Idee> idees1;
 
 	//bi-directional many-to-one association to Commentaire
 	@OneToMany(mappedBy="membre")
@@ -28,13 +52,13 @@ public class Membre implements Serializable {
 	@OneToMany(mappedBy="membre")
 	private Set<Fichier> fichiers;
 
+	//bi-directional many-to-one association to Idee
+	@OneToMany(mappedBy="membre")
+	private Set<Idee> idees2;
+
 	//bi-directional many-to-one association to Profil
 	@OneToMany(mappedBy="membre")
 	private Set<Profil> profils;
-
-	//bi-directional many-to-one association to Role
-	@OneToMany(mappedBy="membre")
-	private Set<Role> roles;
 
 	//bi-directional many-to-one association to Vote
 	@OneToMany(mappedBy="membre")
@@ -51,6 +75,14 @@ public class Membre implements Serializable {
 		this.id = id;
 	}
 
+	public Set<Idee> getIdees1() {
+		return this.idees1;
+	}
+
+	public void setIdees1(Set<Idee> idees1) {
+		this.idees1 = idees1;
+	}
+
 	public Set<Commentaire> getCommentaires() {
 		return this.commentaires;
 	}
@@ -60,14 +92,14 @@ public class Membre implements Serializable {
 	}
 
 	public Commentaire addCommentaire(Commentaire commentaire) {
-		getCommentaires().add(commentaire);
+		this.getCommentaires().add(commentaire);
 		commentaire.setMembre(this);
 
 		return commentaire;
 	}
 
 	public Commentaire removeCommentaire(Commentaire commentaire) {
-		getCommentaires().remove(commentaire);
+		this.getCommentaires().remove(commentaire);
 		commentaire.setMembre(null);
 
 		return commentaire;
@@ -82,17 +114,39 @@ public class Membre implements Serializable {
 	}
 
 	public Fichier addFichier(Fichier fichier) {
-		getFichiers().add(fichier);
+		this.getFichiers().add(fichier);
 		fichier.setMembre(this);
 
 		return fichier;
 	}
 
 	public Fichier removeFichier(Fichier fichier) {
-		getFichiers().remove(fichier);
+		this.getFichiers().remove(fichier);
 		fichier.setMembre(null);
 
 		return fichier;
+	}
+
+	public Set<Idee> getIdees2() {
+		return this.idees2;
+	}
+
+	public void setIdees2(Set<Idee> idees2) {
+		this.idees2 = idees2;
+	}
+
+	public Idee addIdees2(Idee idees2) {
+		this.getIdees2().add(idees2);
+		idees2.setMembre(this);
+
+		return idees2;
+	}
+
+	public Idee removeIdees2(Idee idees2) {
+		this.getIdees2().remove(idees2);
+		idees2.setMembre(null);
+
+		return idees2;
 	}
 
 	public Set<Profil> getProfils() {
@@ -104,39 +158,17 @@ public class Membre implements Serializable {
 	}
 
 	public Profil addProfil(Profil profil) {
-		getProfils().add(profil);
+		this.getProfils().add(profil);
 		profil.setMembre(this);
 
 		return profil;
 	}
 
 	public Profil removeProfil(Profil profil) {
-		getProfils().remove(profil);
+		this.getProfils().remove(profil);
 		profil.setMembre(null);
 
 		return profil;
-	}
-
-	public Set<Role> getRoles() {
-		return this.roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
-	public Role addRole(Role role) {
-		getRoles().add(role);
-		role.setMembre(this);
-
-		return role;
-	}
-
-	public Role removeRole(Role role) {
-		getRoles().remove(role);
-		role.setMembre(null);
-
-		return role;
 	}
 
 	public Set<Vote> getVotes() {
@@ -148,14 +180,14 @@ public class Membre implements Serializable {
 	}
 
 	public Vote addVote(Vote vote) {
-		getVotes().add(vote);
+		this.getVotes().add(vote);
 		vote.setMembre(this);
 
 		return vote;
 	}
 
 	public Vote removeVote(Vote vote) {
-		getVotes().remove(vote);
+		this.getVotes().remove(vote);
 		vote.setMembre(null);
 
 		return vote;

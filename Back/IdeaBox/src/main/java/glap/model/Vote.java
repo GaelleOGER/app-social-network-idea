@@ -1,13 +1,25 @@
 package glap.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 /**
  * The persistent class for the vote database table.
- * 
+ *
  */
 @Entity
 @Table(name="vote")
@@ -18,13 +30,13 @@ public class Vote implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
-	private int id;
+	private Integer id;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at", nullable=false)
 	private Date createdAt;
 
-	private byte positif;
+	private Boolean positif;
 
 	//bi-directional many-to-one association to Commentaire
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -44,7 +56,7 @@ public class Vote implements Serializable {
 	public Vote() {
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
@@ -60,11 +72,11 @@ public class Vote implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	public byte getPositif() {
+	public Boolean isPositif() {
 		return this.positif;
 	}
 
-	public void setPositif(byte positif) {
+	public void setPositif(Boolean positif) {
 		this.positif = positif;
 	}
 
